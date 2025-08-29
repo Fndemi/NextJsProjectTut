@@ -1,7 +1,7 @@
 import SearchForm from "@/components/SearchForm";
-import StartupCard from "@/components/StartupCard";
-import { type StartupTypeCard } from "@/components/StartupCard"; // ✅ reuse the type
-
+import StartupCard,{StartupTypeCard} from "@/components/StartupCard";
+import {STARTUPS_QUERY} from "@/sanity/lib/queries"
+import {sanityFetch,SanityLive} from "@/sanity/lib/live"
 export default async function Home({
   searchParams,
 }: {
@@ -9,21 +9,12 @@ export default async function Home({
 }) {
   const query = (await searchParams).query;
 
-  const posts: StartupTypeCard[] = [
-    {
-      _createdAt: new Date().toISOString(),
-      views: 55,
-      author: { _id: 1, name: "Adrian" },
-      _id: 1,
-      description: "This is a description",
-      image:
-        "https://www.google.com/imgres?q=trobots&imgurl=https%3A%2F%2Fyt3.googleusercontent.com%2Fytc%2FAIdro_lMiOzxJXmfW3_HJOU9Kdpp5dM-UkdXTDvZxyaAYCJbS5M%3Ds900-c-k-c0x00ffffff-no-rj&imgrefurl=https%3A%2F%2Fwww.youtube.com%2F%405013Trobots&docid=M8LAxi_pwyMezM&tbnid=sNG4DfMXe6-BZM&vet=12ahUKEwj-4qmJha2PAxWFTKQEHSGNAmAQM3oECBcQAA..i&w=900&h=900&hcb=2&ved=2ahUKEwj-4qmJha2PAxWFTKQEHSGNAmAQM3oECBcQAA",
-      category: "Robots",
-      title: "We Robots",
-    },
-  ];
+  const params = {search:query || null}
 
-  return (
+  // const posts = await client.fetch(STARTUPS_QUERY) 
+  const {data:posts} = await sanityFetch({query:STARTUPS_QUERY,params})
+
+    return (
     <>
       <section className="pink_container">
         <h1 className="heading">
@@ -42,7 +33,7 @@ export default async function Home({
         </p>
         <ul className="mt-7 card_grid">
           {posts?.length > 0 ? (
-            posts.map((post) => (
+            posts.map((post:StartupTypeCard) => (
               <StartupCard key={post._id} post={post} />
             ))
           ) : (
@@ -50,6 +41,7 @@ export default async function Home({
           )}
         </ul>
       </section>
+      <SanityLive/>
     </>
   );
 }
