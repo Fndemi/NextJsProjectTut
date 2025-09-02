@@ -14,10 +14,10 @@ const nextConfig: NextConfig = {
   experimental: {
     ppr: "incremental",
   },
+
+  // ✅ Update devIndicators
   devIndicators: {
-    appIsrStatus: true,
-    buildActivity: true,
-    buildActivityPosition: "bottom-right",
+    position: "bottom-right", // replaces buildActivityPosition
   },
 };
 
